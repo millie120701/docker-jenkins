@@ -3,7 +3,7 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
   build:
@@ -21,6 +21,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
+    - name: Run tests
+      run: npm test
+
     - name: Build Docker image
       run: docker build -t my-nodejs-app .
 
@@ -36,3 +39,14 @@ jobs:
       run: |
         docker tag my-nodejs-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/my-nodejs-app:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-nodejs-app:latest
+
+    - name: Deploy to Elastic Beanstalk
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'us-west-2'  
+      run: |
+        pip install awsebcli
+        echo "Deploying to Elastic Beanstalk..."
+        eb init -p docker my-nodejs-app --region $AWS_DEFAULT_REGION
+        eb deploy
