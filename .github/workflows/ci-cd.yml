@@ -47,4 +47,10 @@ jobs:
         echo "Deploying to Elastic Beanstalk..."
         eb init -p docker my-nodejs-app --region $AWS_DEFAULT_REGION --platform docker
         eb use Eb-auto-deploy-env  
-        eb deploy
+
+
+        VERSION_LABEL="app-$(date +%s)"
+        eb create $VERSION_LABEL
+
+
+        eb deploy --version $VERSION_LABEL
