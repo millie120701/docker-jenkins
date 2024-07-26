@@ -1,0 +1,6 @@
+global:
+  application_name: my-nodejs-app
+  default_region: eu-west-2
+  platform: Docker
+  branch_default:
+    environment: Eb-auto-deployment-env
