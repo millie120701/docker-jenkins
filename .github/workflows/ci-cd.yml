@@ -20,7 +20,7 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      
+
     - name: Build Docker image
       run: docker build -t my-nodejs-app .
 
@@ -46,11 +46,10 @@ jobs:
         pip install awsebcli
         echo "Deploying to Elastic Beanstalk..."
         eb init -p docker my-nodejs-app --region $AWS_DEFAULT_REGION --platform docker
-        eb use Eb-auto-deployment-env
+        eb use Eb-auto-deployment-env  # Specify your environment name here
 
-
+        # Create a new application version
         VERSION_LABEL="app-$(date +%s)"
-        eb create $VERSION_LABEL
 
-
+        # Deploy the specified application version
         eb deploy --version $VERSION_LABEL
