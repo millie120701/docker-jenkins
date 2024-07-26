@@ -46,7 +46,7 @@ jobs:
         pip install awsebcli
         echo "Deploying to Elastic Beanstalk..."
         eb init -p docker my-nodejs-app --region $AWS_DEFAULT_REGION --platform docker
-        eb use Eb-auto-deploy-env  
+        eb use Eb-auto-deploy-1-env
 
 
         VERSION_LABEL="app-$(date +%s)"
