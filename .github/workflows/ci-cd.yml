@@ -36,7 +36,7 @@ jobs:
       run: |
         docker tag my-nodejs-app:latest ${{ secrets.DOCKER_HUB_USERNAME }}/my-nodejs-app:latest
         docker push ${{ secrets.DOCKER_HUB_USERNAME }}/my-nodejs-app:latest
-
+    
     - name: Deploy to Elastic Beanstalk
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -44,12 +44,20 @@ jobs:
         AWS_DEFAULT_REGION: 'eu-west-2'
       run: |
         pip install awsebcli
-
-        # Initialize Elastic Beanstalk
+        echo "Deploying to Elastic Beanstalk..."
+        
+        # Print environment variables for debugging
+        echo "AWS_REGION: $AWS_DEFAULT_REGION"
+        
+        # Initialize Elastic Beanstalk application
         eb init -p docker my-nodejs-app --region $AWS_DEFAULT_REGION
-
-        # Set the environment name
-        echo "Eb-auto-deployment-env" > .elasticbeanstalk/config.yml
-
+    
+        # Use the specific environment
+        eb use Eb-auto-deployment-env
+    
+        # Create a new application version
+        VERSION_LABEL="app-$(date +%s)"
+        echo "Creating new application version: $VERSION_LABEL"
+    
         # Deploy the Docker image
         eb deploy --region $AWS_DEFAULT_REGION
